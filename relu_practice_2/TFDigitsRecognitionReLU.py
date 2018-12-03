@@ -7,6 +7,8 @@ mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 with tf.name_scope('input_data') as input_scope:
     x = tf.placeholder(tf.float32, [None, 784])
 
+keep_probability = tf.placeholder(tf.float32,name='prob')
+
 with tf.name_scope('layers') as layers_scope:
     W = tf.Variable(tf.truncated_normal([784, 784], stddev=0.1), name='weight_1')
     b = tf.Variable(tf.truncated_normal([784], stddev=0.1), name='bias_1')
@@ -31,7 +33,7 @@ with tf.Session() as sess:
 
     for i in range(2000):
         batch_xs, batch_ys = mnist.train.next_batch(100)
-        sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
+        sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys, keep_probability: 0.5})
 
     correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
